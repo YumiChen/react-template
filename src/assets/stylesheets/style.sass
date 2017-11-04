@@ -1,0 +1,47 @@
+$breakpoints: ("phone":400px,"phone-wide":480px,"phablet":560px,"tablet-small": 640px,"tablet":768px,"tablet-wide":1024px,"desktop":1248px,"desktop-wide": 1440px)
+
+@mixin mq($width, $type: min)
+  @if map_has_key($breakpoints, $width)
+    $width: map_get($breakpoints, $width)
+    @if $type == max
+      $width: $width - 1px
+    @media only screen and (#{$type}-width: $width)
+      @content
+
+@import "./resetCss"
+
+*
+  // border: solid 1px
+  box-sizing: border-box
+  position: relative
+  font-family: 微軟正黑體
+  transition: all .4s
+
+html, body
+  margin: 0
+  min-height: 100vh
+  overflow-x: hidden
+
+body
+  background-image: url(../images/bg.jpg)
+  background-size: cover
+  background-repeat: no-repeat
+  &::-webkit-scrollbar-track
+    border: 1px solid blue
+    background-color: rgba(255,255,255,0.2)
+  &::-webkit-scrollbar
+    width: 6px
+    background-color: rgba(255,255,255,0.2)
+  &::-webkit-scrollbar-thumb
+    background-color: blue
+
+.swal2-buttonswrapper
+  button
+    border: 0px
+    margin: 0 1em
+    padding: 0.5em 1.2em
+    background-color: orange
+    border-radius: .2em
+    color: white
+    &:hover
+      background-color: red

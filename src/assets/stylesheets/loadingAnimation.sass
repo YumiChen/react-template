@@ -1,0 +1,28 @@
+.dotContainer
+  position: fixed
+  width: 7em
+  height: 7em
+  top: 50%
+  left: 50%
+  transform: translate(-50%,-50%)
+
+@for $i from 1 through 10
+  .dot:nth-child(#{$i})
+    width: 10%
+    height: 10%
+    border-radius: 10em
+    background-color: white
+    position: absolute
+    transform-origin: 500% 500%
+    transform: rotate(#{$i*36}deg)
+    animation: opa#{$i} 1s infinite both 
+
+  @keyframes opa#{$i}
+    0%
+      opacity: .1
+    #{($i - 1) * 10}%
+      opacity: .5
+    #{$i * 10}%
+      opacity: 1
+    #{($i + 1) * 10}%
+      opacity: .5
