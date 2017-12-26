@@ -2,14 +2,12 @@ const webpack = require('webpack');
 const path = require('path');
 const autoprefixer = require("autoprefixer");
 
-module.exports = [{
-  entry: {
-    app:     
+let settings = [{
+  entry:
       [
-        'eventsource-polyfill',
         './src/index'
       ]
-  },
+  ,
   output: {
     path: path.join(__dirname, '/public'),
     publicPath: '/',
@@ -90,3 +88,18 @@ module.exports = [{
     new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
   ]
 }];
+
+// hmr
+if(process.env.NODE_ENV != 'production'){
+  settings.forEach(function(settings){
+    settings.entry = settings.entry.concat([
+      'eventsource-polyfill',
+      'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true'
+    ]);
+    settings.plugins = settings.plugins.concat([    
+      new webpack.HotModuleReplacementPlugin()
+    ]);
+  });
+}
+
+module.exports = settings;
