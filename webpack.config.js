@@ -2,7 +2,6 @@ const webpack = require('webpack');
 const path = require('path');
 const autoprefixer = require("autoprefixer");
 
-// including sass
 module.exports = [{
   entry: {
     app:     
@@ -22,67 +21,41 @@ module.exports = [{
         use: ["babel-loader"], 
         exclude: /node_modules/,
         },
-      { test: /\.sass/, 
+      { test: /\.sass$/, 
         use: [
           'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
+          {loader:'css-loader',
+            options:{
               minimize: true
             }
           },
-          'postcss-loader'
-          ,'sass-loader'
+          'postcss-loader',
+          'sass-loader'
         ], 
         exclude: /node_modules/ 
       },
-      { test: /\.css$/, 
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              minimize: true
-            }
-          }
-        ]
-      },
-      // {
-      //   test: /\.(html)$/,
-      //   use: {
-      //     loader: 'html-loader',
-      //     options: {
-      //       minimize: true
-      //     }
-      //   }
-      // }
-      // ,
-      { test: /\.svg$/, loader: 'url-loader?limit=8000&mimetype=image/svg+xml&name=fonts/[name].[ext]' },
-      { test: /\.woff$/, loader: 'url-loader?limit=8000&mimetype=application/font-woff&name=fonts/[name].[ext]' },
-      { test: /\.woff2$/, loader: 'url-loader?limit=8000&mimetype=application/font-woff2&name=fonts/[name].[ext]' },
-      { test: /\.[ot]tf$/, loader: 'url-loader?limit=8000&mimetype=application/octet-stream&name=fonts/[name].[ext]' },
-      { test: /\.eot$/, loader: 'url-loader?limit=8000&mimetype=application/vnd.ms-fontobject&name=fonts/[name].[ext]' },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         use: [
           {
-            loader: 'url-loader?name=images/[name].[ext]'
-          },
-          {
-            loader: 'image-webpack-loader',
+            loader: 'url-loader',
             options: {
-              mozjpeg: {
-                progressive: true,
-                quality: 65
-              }
+              limit: 10000, /* file smaller than 10kB would be transformed into base64 */
+              name: "./assets/images/[name].[ext]",
+              // publicPath: "/assets"
             }
           }
         ]
-      }
-      ,
-      {
-        test: /jquery[\\\/]src[\\\/]selector\.js$/, 
-        loader: 'amd-define-factory-patcher-loader'
+      },
+      { 
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        loader: 'url-loader',
+        options:{
+          limit: 65000,
+          mimetype: "application/octet-stream",
+          name: "/fonts/[name].[ext]",
+          // publicPath: "./assets"          
+        } 
       }
     ]
   },
@@ -90,10 +63,12 @@ module.exports = [{
     extensions: ['.js','.sass', ".jsx"]
   },
   devServer: {
-    port: process.env.PORT || 5000,
+    port: process.env.PORT || 8080,
     host: "localhost",
     contentBase: "./public",
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: ''
+    },
     hot: true,
     inline: true
   }
@@ -105,12 +80,13 @@ module.exports = [{
         'NODE_ENV': JSON.stringify('production')
       }
     }),
+    new webpack.ProvidePlugin({
+      React: 'react',
+      ReactDOM:'react-dom'
+    }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.DedupePlugin(), //dedupe similar code 
     new webpack.optimize.UglifyJsPlugin(), //minify everything
     new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
   ]
 }];
-
-// var info = autoprefixer().info();
-// console.log(info);
