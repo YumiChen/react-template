@@ -5,7 +5,7 @@ var compression = require("compression");
 
 // App setup
 var app = express(),
-    port =process.env.port || 5000;
+    port =process.env.port || process.env.NODE_ENV.trim()==='development'?8080 : 5000;
 var server = app.listen(port, function(){
     console.log('listening for requests on port ' + port);
 });
@@ -23,11 +23,13 @@ app.use( BodyParser.json() );
 app.use("/",router);
 
 // hmr
-if(process.env.NODE_ENV != 'production'){
+if(process.env.NODE_ENV.trim() === 'development'){
 
     var webpack = require('webpack');
     var config = require('./webpack.config');
     var compiler = webpack(config);
+
+    console.log('hmr added');
 
     var webpackDevMiddleware = require("webpack-dev-middleware");
     var webpackHotMiddleware = require("webpack-hot-middleware");

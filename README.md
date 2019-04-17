@@ -1,2 +1,2 @@
-# Portfolio
-React&Redux start template
+# React Template
+Node.js&React&Redux start template
